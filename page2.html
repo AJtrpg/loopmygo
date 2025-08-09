@@ -31,53 +31,35 @@
         const optionsDiv = document.getElementById('options');
         const yesBtn = document.getElementById('yes');
         const noBtn = document.getElementById('no');
-        let selection = 1; // 0 = YES, 1 = NO
+        let selection = 1; // 預設 NO
 
-        function showLine() {
-            if (i < codeLines.length) {
-                display.textContent += codeLines[i] + "\n";
-                i++;
-                setTimeout(showLine, 500);
-            } else {
-                optionsDiv.style.display = "block";
-                enableInteraction();
-            }
+function enableInteraction() {
+    updateSelection(); // 進入互動前先套用預設選擇
+
+    // 鍵盤控制
+    document.addEventListener('keydown', function(e) {
+        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+            selection = selection === 0 ? 1 : 0;
+            updateSelection();
+        } else if (e.key === "Enter") {
+            executeSelection();
         }
+    });
 
-        function updateSelection() {
-            if (selection === 0) {
-                yesBtn.classList.add('selected');
-                noBtn.classList.remove('selected');
-            } else {
-                yesBtn.classList.remove('selected');
-                noBtn.classList.add('selected');
-            }
-        }
+    // 滑鼠控制
+    yesBtn.addEventListener('click', function() {
+        selection = 0;
+        updateSelection();
+        executeSelection();
+    });
 
-        function enableInteraction() {
-            // 鍵盤控制
-            document.addEventListener('keydown', function(e) {
-                if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-                    selection = selection === 0 ? 1 : 0;
-                    updateSelection();
-                } else if (e.key === "Enter") {
-                    executeSelection();
-                }
-            });
+    noBtn.addEventListener('click', function() {
+        selection = 1;
+        updateSelection();
+        executeSelection();
+    });
+}
 
-            // 滑鼠控制
-            yesBtn.addEventListener('click', function() {
-                selection = 0;
-                updateSelection();
-                executeSelection();
-            });
-
-            noBtn.addEventListener('click', function() {
-                selection = 1;
-                updateSelection();
-                executeSelection();
-            });
-        }
 
         function executeSelection() {
             if (selection === 0) {
