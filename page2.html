@@ -1,75 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <title>系統載入中</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        .option { cursor: pointer; padding: 0 5px; }
-        .selected { background-color: #00ff00; color: black; }
+        body {
+            background-color: black;
+            color: #00ff00;
+            font-family: monospace;
+            white-space: pre;
+            padding: 20px;
+        }
+        #options {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px; /* YES 和 NO 之間的間距 */
+        }
+        .option {
+            padding: 5px 10px;
+            border: 1px solid #00ff00;
+            cursor: pointer;
+        }
+        .selected {
+            background-color: #00ff00;
+            color: black;
+        }
     </style>
 </head>
 <body>
-    <pre id="code-display"></pre>
-    <div id="options" style="display:none;">
-        程式格式化： 
-        <span id="yes" class="option selected">YES</span>
-        <span id="no" class="option">NO</span>
-    </div>
-    <script>
-        const codeLines = [
-            "系統啟動中...",
-            "載入模組：network.dll",
-            "載入模組：system.core",
-            "驗證安全憑證...",
-            "讀取資料...",
-            "---------------------------"
-        ];
+<pre id="codeDisplay"></pre>
+<div id="options" style="display:none;">
+    <span id="yes" class="option">YES</span>
+    <span id="no" class="option">NO</span>
+</div>
 
-        let i = 0;
-        const display = document.getElementById('code-display');
-        const optionsDiv = document.getElementById('options');
-        const yesBtn = document.getElementById('yes');
-        const noBtn = document.getElementById('no');
-        let selection = 1; // 預設 NO
+<script>
+    const codeLines = [
+        "正在載入系統模組...",
+        "初始化程序...",
+        "檢查記憶體分配...",
+        "載入核心參數...",
+        "系統連接測試...",
+        "權限檢測...",
+        "代碼驗證通過",
+        "----------------------------",
+        "程式格式化："
+    ];
 
-function enableInteraction() {
-    updateSelection(); // 進入互動前先套用預設選擇
+    const display = document.getElementById('codeDisplay');
+    const optionsDiv = document.getElementById('options');
+    const yesBtn = document.getElementById('yes');
+    const noBtn = document.getElementById('no');
 
-    // 鍵盤控制
-    document.addEventListener('keydown', function(e) {
-        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-            selection = selection === 0 ? 1 : 0;
-            updateSelection();
-        } else if (e.key === "Enter") {
-            executeSelection();
+    let selection = 1; // 預設停在 NO
+
+    function updateSelection() {
+        yesBtn.classList.toggle('selected', selection === 0);
+        noBtn.classList.toggle('selected', selection === 1);
+    }
+
+    function executeSelection() {
+        if (selection === 0) {
+            window.location.href = "page3.html";
+        } else {
+            document.body.innerHTML = "";
+            document.body.style.backgroundColor = "black";
         }
-    });
+    }
 
-    // 滑鼠控制
-    yesBtn.addEventListener('click', function() {
-        selection = 0;
-        updateSelection();
-        executeSelection();
-    });
+    function enableInteraction() {
+        updateSelection(); // 套用預設選擇
 
-    noBtn.addEventListener('click', function() {
-        selection = 1;
-        updateSelection();
-        executeSelection();
-    });
-}
-
-
-        function executeSelection() {
-            if (selection === 0) {
-                window.location.href = "page3.html";
-            } else {
-                window.location.href = "black.html";
+        // 鍵盤控制
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+                selection = selection === 0 ? 1 : 0;
+                updateSelection();
+            } else if (e.key === "Enter") {
+                executeSelection();
             }
-        }
+        });
 
-        showLine();
-    </script>
+        // 滑鼠控制
+        yesBtn.addEventListener('click', function() {
+            selection = 0;
+            updateSelection();
+            executeSelection();
+        });
+
+        noBtn.addEventListener('click', function() {
+            selection = 1;
+            updateSelection();
+            executeSelection();
+        });
+    }
+
+    function showCode(index) {
+        if (index < codeLines.length) {
+            display.textContent += codeLines[index] + "\n";
+            setTimeout(() => showCode(index + 1), 300);
+        } else {
+            optionsDiv.style.display = "flex"; // 水平排列
+            enableInteraction();
+        }
+    }
+
+    showCode(0);
+</script>
 </body>
 </html>
