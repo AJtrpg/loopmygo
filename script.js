@@ -3,8 +3,8 @@ function login() {
     const password = document.getElementById('password').value.trim();
     const error = document.getElementById('error');
 
-    const correctUser = "CARL QUEST";
-    const correctPasswords = ["STEVEN QUEST", "ANNA QUEST"];
+    const correctUser = "carlquest";
+    const correctPasswords = ["stevenquest", "annaquest"];
 
     if (username !== correctUser) {
         error.textContent = "帳號錯誤";
